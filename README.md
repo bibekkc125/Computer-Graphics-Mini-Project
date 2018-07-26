@@ -1,18 +1,18 @@
-Computer Graphics Mini-Project (Utah Teapot)
+#Computer Graphics Mini-Project (Utah Teapot)
 
-Language Used:
+##Language Used:
 
 C++
 
-Platform:
+##Platform:
 
-Visual Studio 2017
+* Visual Studio 2017
 
-Libraries Used:
+##Libraries Used:
 
-GLEW
-GLUT
+* GLEW
+* GLUT
 
-Instructions:
+##Instructions:
 
 First install Mirosoft Visual Studio 2017. Then, download and install necessary libraries. Copy,paste and run the code.
