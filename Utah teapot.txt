@@ -1,0 +1,102 @@
+#include <GL/glew.h>
+#include <GL/glut.h>
+	
+float yrotate = 0.0;
+
+//set material lighting properties
+void setMaterial(GLfloat ambientR, GLfloat ambientG, GLfloat ambientB,
+	GLfloat diffuseR, GLfloat diffuseG, GLfloat diffuseB,
+	GLfloat specularR, GLfloat specularG, GLfloat specularB,
+	GLfloat shininess) {
+
+	GLfloat ambient[] = { ambientR, ambientG, ambientB };
+	GLfloat diffuse[] = { diffuseR, diffuseG, diffuseB };
+	GLfloat specular[] = { specularR, specularG, specularB };
+
+	glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, ambient);
+	glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, diffuse);
+	glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, specular);
+	glMaterialf(GL_FRONT_AND_BACK, GL_SHININESS, shininess);
+}
+
+void display() {
+
+	// clear window to color specified by glClearColor
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	glClearColor(0.05, 0.05, 0.1, 0.0);
+
+	// modelview matrix 
+	glMatrixMode(GL_MODELVIEW);
+
+	// draw scene 
+	setMaterial(0.1, 0.1, 0.1, 0.6, 0.6, 0.6, 1.0, 1.0, 1.0, 40);
+	glRotatef(yrotate, 0, 1, 0);
+
+	// draw solid teapot
+	glutSolidTeapot(1);
+
+	// flush drawing routines to the window 
+	glFlush();
+}
+
+void rotate(void)
+{
+	yrotate = (3.14 / 180) * yrotate;
+	yrotate += 0.01;
+	
+	display();
+}
+
+//Allows resizing the window
+void reshape(int width, int height) {
+
+	/* define the viewport transformation */
+	glViewport(0, 0, width, height);
+}
+
+int main(int argc, char * argv[]) {
+
+	//Initialize glut
+	glutInit(&argc, argv);
+	
+	// Configure window size, position and display mode
+	glutInitWindowSize(650, 650);
+	glutInitWindowPosition(400, 80);
+	glutInitDisplayMode(GLUT_RGB | GLUT_DEPTH);
+
+	//create and label window
+	glutCreateWindow("Utah Teapot");
+	
+	glutDisplayFunc(display);
+	glutReshapeFunc(reshape);
+	glutIdleFunc(rotate);
+
+	//Enable depth-buffering 
+	glEnable(GL_DEPTH_TEST);
+
+	//Lighting parameters
+	GLfloat lightpos[] = { -6.0, 2.0, 5.0,0.0 };
+	GLfloat ambcolor[] = { 0.0, 0.8, 0.8 };
+
+	//Enable Lighting
+	glEnable(GL_LIGHTING);
+	glLightModelfv(GL_LIGHT_MODEL_AMBIENT, ambcolor);
+
+	glEnable(GL_LIGHT0);
+	//Adjust lighting position
+	glLightfv(GL_LIGHT0, GL_POSITION, lightpos);
+
+	// define the projection transformation 
+	glMatrixMode(GL_PROJECTION);
+	glLoadIdentity();
+	gluPerspective(22, 1, 1, 30);
+
+	// define the viewing transformation 
+	glMatrixMode(GL_MODELVIEW);
+	glLoadIdentity();
+	gluLookAt(6.0, 6.0, 6.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
+
+	// tell GLUT to wait for events
+	// this loop runs infinitely
+	glutMainLoop();
+}
